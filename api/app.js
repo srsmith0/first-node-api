@@ -7,6 +7,7 @@ const multer = require('multer');
 require('dotenv').config();
 
 const feedRoutes = require('./routes/feed');
+const authRoutes = require('./routes/auth');
 
 const MONGODB_URI = process.env.DATABASE_PATH
 
@@ -44,7 +45,8 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use('/feed', feedRoutes);
+app.use('/feed', feedRoutes); 
+app.use('/auth', authRoutes); 
 
 app.use((error, req, res, next) => {
     console.log(error);
