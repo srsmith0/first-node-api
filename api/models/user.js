@@ -15,13 +15,13 @@ const userSchema = new Schema({
     required: true,
   },
   status: {
-    type: Sttring,
-    required: TextTrackCue
+    type: String,
+    required: true
   },
   posts: [
     {
     //links posts to users
-    type: Schmea.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'Post'
   }
 ]
