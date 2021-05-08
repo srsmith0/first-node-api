@@ -13,12 +13,24 @@ const handleError = (err, next) => {
 }
 
 exports.getPosts = (req, res, next) => {
-  Post.find()
+  //for pagination, page is query paramenter on front end
+  const currentPage = req.query.page || 1;
+  console.log(req.query.page)
+  console.log(currentPage)
+  const perPage = 2;
+  let totalItems;
+  Post.find().countDocuments()
+  .then(count => {
+    totalItems = count;
+    return Post.find()
+      .skip((currentPage - 1) * perPage) //main pagination logic
+      .limit(perPage);
+  })
   .then(posts => {
-    res.status(200).json({ posts });
+    res.status(200).json({ posts, totalItems });
   })
   .catch(err => {
-    handleError(err, next);
+    handleError(err, next)
   });
 };
 
