@@ -10,7 +10,7 @@ const handleError = (err, next) => {
     err.statusCode = 500;
     }
   next(err);
-}
+};
 
 exports.getPosts = (req, res, next) => {
   //for pagination, page is query paramenter on front end
@@ -143,9 +143,9 @@ exports.deletePost = (req, res, next) => {
     .catch(err => {
       handleError(err, next)
     })
-}
+};
 
 const clearImage = filePath => {
   filePath = path.join(__dirname, '..', filePath);
   fs.unlink(filePath, err => console.log(err));
-}
+};
