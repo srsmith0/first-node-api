@@ -22,7 +22,6 @@ exports.signUp = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
   const name = req.body.name;
-  console.log(req.body)
   bcrypt.hash(password, 12) //this is hashing + salting the password. 2nd arg is length for salt  
     .then(hashedPw => {
       const user = new User({

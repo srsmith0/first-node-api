@@ -15,8 +15,6 @@ const handleError = (err, next) => {
 exports.getPosts = (req, res, next) => {
   //for pagination, page is query paramenter on front end
   const currentPage = req.query.page || 1;
-  console.log(req.query.page)
-  console.log(currentPage)
   const perPage = 2;
   let totalItems;
   Post.find().countDocuments()
@@ -56,7 +54,6 @@ exports.createPost = (req, res, next) => {
       creator: { name: 'Shawn' },
   });
   post.save().then(result => {
-    console.log('works"')
     res.status(201).json({
       message: 'Post created successfully!',
       post: result
