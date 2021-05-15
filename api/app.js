@@ -3,11 +3,16 @@ const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const multer = require('multer');
+const { graphqlHTTP } = require('express-graphql');
+
+const graphqlSchema = require('./graphql/schema');
+const graphqlResolver = require('./graphql/resolvers');
 
 require('dotenv').config();
 
-const feedRoutes = require('./routes/feed');
-const authRoutes = require('./routes/auth');
+// do not need with graphQL
+// const feedRoutes = require('./routes/feed');
+// const authRoutes = require('./routes/auth');
 
 const MONGODB_URI = process.env.DATABASE_PATH
 
@@ -45,8 +50,17 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use('/feed', feedRoutes); 
-app.use('/auth', authRoutes); 
+//don't need with graphQL
+// app.use('/feed', feedRoutes); 
+// app.use('/auth', authRoutes); 
+
+app.use(
+    '/graphql', 
+    graphqlHTTP({
+        schema: graphqlSchema,
+        rootValue: graphqlResolver,
+    })
+);
 
 app.use((error, req, res, next) => {
     console.log(error);
@@ -60,10 +74,12 @@ mongoose.connect(
     MONGODB_URI
     )
     .then(result => {
-        const server = app.listen(8080);
-        const io = require('./socket').init(server);
-        io.on('connection', socket => {
-            console.log('Client connected');
-        });
+        app.listen(8080)
+        //code if not using graphQL
+        // const server = app.listen(8080);
+        // const io = require('./socket').init(server);
+        // io.on('connection', socket => {
+        //     console.log('Client connected');
+        // });
     })
     .catch(err => console.log(err));
