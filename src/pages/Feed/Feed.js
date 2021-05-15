@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import openSocket from 'socket.io-client';
+// import openSocket from 'socket.io-client';
 
 import Post from '../../components/Feed/Post/Post';
 import Button from '../../components/Button/Button';
@@ -43,43 +43,45 @@ class Feed extends Component {
     const socket = openSocket('http://localhost:8080', {
       transports: ["websocket", "polling", "flashsocket"]
     });
-    socket.on('posts', data => {
-      if (data.action === 'create') {
-        this.addPost(data.post);
-      } else if (data.action === 'update') {
-        this.updatePost(data.post);
-      } else if (data.action === 'delete') {
-        this.loadPosts();
-      }
-    });
+    // socket.on('posts', data => {
+    //   if (data.action === 'create') {
+    //     this.addPost(data.post);
+    //   } else if (data.action === 'update') {
+    //     this.updatePost(data.post);
+    //   } else if (data.action === 'delete') {
+    //     this.loadPosts();
+    //   }
+    // });
   };
 
-  addPost = post => {
-    this.setState(prevState => {
-      const updatedPosts = [...prevState.posts];;
-      if (prevState.postPage ===1) {
-        updatedPosts.pop();
-        updatedPosts.unshift(post);
-      }
-      return {
-        posts: updatedPosts,
-        toatlPosts: prevState.totalPosts + 1
-      };
-    });
-  };
 
-  updatePost = post => {
-    this.setState(prevState => {
-      const updatedPosts = [...prevState.posts];
-      const updatedPostIndex = updatedPosts.findIndex(p => p._id === post._id);
-      if (updatedPostIndex > -1) {
-        updatedPosts[updatedPostIndex] = post;
-      }
-      return {
-        posts: updatedPosts
-      };
-    });
-  };
+  //Don't use addPost or updatePost with graphQL
+  // addPost = post => {
+  //   this.setState(prevState => {
+  //     const updatedPosts = [...prevState.posts];;
+  //     if (prevState.postPage ===1) {
+  //       updatedPosts.pop();
+  //       updatedPosts.unshift(post);
+  //     }
+  //     return {
+  //       posts: updatedPosts,
+  //       toatlPosts: prevState.totalPosts + 1
+  //     };
+  //   });
+  // };
+
+  // updatePost = post => {
+  //   this.setState(prevState => {
+  //     const updatedPosts = [...prevState.posts];
+  //     const updatedPostIndex = updatedPosts.findIndex(p => p._id === post._id);
+  //     if (updatedPostIndex > -1) {
+  //       updatedPosts[updatedPostIndex] = post;
+  //     }
+  //     return {
+  //       posts: updatedPosts
+  //     };
+  //   });
+  // };
 
   loadPosts = direction => {
     if (direction) {
