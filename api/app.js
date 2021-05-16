@@ -7,6 +7,7 @@ const { graphqlHTTP } = require('express-graphql');
 
 const graphqlSchema = require('./graphql/schema');
 const graphqlResolver = require('./graphql/resolvers');
+const auth = require('./middleware/is-auth');
 
 require('dotenv').config();
 
@@ -53,9 +54,12 @@ app.use((req, res, next) => {
     next();
 });
 
+
 //don't need with graphQL
 // app.use('/feed', feedRoutes); 
 // app.use('/auth', authRoutes); 
+
+app.use(auth);
 
 app.use(
     '/graphql', 
