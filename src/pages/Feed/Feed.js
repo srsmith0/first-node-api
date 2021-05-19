@@ -104,6 +104,7 @@ class Feed extends Component {
               _id
               title
               content
+              imageUrl
               creator {
                 name
               }
@@ -191,23 +192,27 @@ class Feed extends Component {
       editLoading: true
     });
     const formData = new FormData();
-    formData.append('title', postData.title);
-    formData.append('content', postData.content);
     formData.append('image', postData.image);
-    // let url = 'http://localhost:8080/feed/post';
-    // let method = 'POST'
-    // if (this.state.editPost) {
-    //   url = `http://localhost:8080/feed/post/${this.state.editPost._id}`;
-    //   method = 'PUT';
-    // }
-    let graphqlQuery = {
+    if (this.state.editPost) {
+      formData.append('oldPath', this.state.editPost.imagePath);
+    }
+    fetch('http://localhost:8080/post-image', {
+      method: "PUT",
+      headers: {
+        Authorization: 'Bearer ' + this.props.token
+      },
+      body: formData
+    }).then(res => res.json())
+      .then(fileResData => {
+      const imageUrl = fileResData.filePath;
+      let graphqlQuery = {
       query: `
         mutation {
           createPost(
             postInput: {
               title: "${postData.title}",
               content: "${postData.content}",
-              imageUrl: "someUrl",
+              imageUrl: "${imageUrl}",
         }) {
           _id
           title
@@ -221,8 +226,7 @@ class Feed extends Component {
         }
       `
     };
-
-    fetch('http://localhost:8080/graphql', {
+    return fetch('http://localhost:8080/graphql', {
       method: 'POST',
       body: JSON.stringify(graphqlQuery),
       headers: {
@@ -230,6 +234,13 @@ class Feed extends Component {
         'Content-Type': 'application/json'
         }
       })
+    })
+    // let url = 'http://localhost:8080/feed/post';
+    // let method = 'POST'
+    // if (this.state.editPost) {
+    //   url = `http://localhost:8080/feed/post/${this.state.editPost._id}`;
+    //   method = 'PUT';
+    // }
       .then(res => {
         return res.json();
       })
@@ -248,7 +259,8 @@ class Feed extends Component {
           title: resData.data.createPost.title,
           content: resData.data.createPost.content,
           creator: resData.data.createPost.creator,
-          createdAt: resData.data.createPost.createdAt
+          createdAt: resData.data.createPost.createdAt,
+          imagePath: resData.data.createPost.imageUrl
         };
         this.setState(prevState => {
           let updatedPosts = [...prevState.posts];
@@ -258,6 +270,7 @@ class Feed extends Component {
             );
             updatedPosts[postIndex] = post;
           } else {
+            updatedPosts.pop();
             updatedPosts.unshift(post);
           }
           return {
