@@ -15,8 +15,7 @@ class SinglePost extends Component {
   componentDidMount() {
     const postId = this.props.match.params.postId;
     const graphqlQuery = {
-      query: `
-      {
+      query: ` {
         post(id: "${postId}") {
           title
           content
