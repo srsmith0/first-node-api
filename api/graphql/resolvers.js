@@ -210,6 +210,7 @@ module.exports = {
       error.code = 403;
       throw error;
     }
+    console.log(post)
     clearImage(post.imageUrl);
     await Post.findByIdAndRemove(id);
     const user = await User.findById(req.userId);
